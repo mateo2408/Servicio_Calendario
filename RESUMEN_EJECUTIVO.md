@@ -137,7 +137,7 @@ Verás:
 ### 2. Ejecutar el Proyecto
 
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 
 # Compilar (verifica que no hay errores)
 mvn clean compile

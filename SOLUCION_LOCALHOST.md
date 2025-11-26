@@ -12,7 +12,7 @@ La aplicación **NO está corriendo**. Por eso localhost no funciona.
 
 1. **Abrir IntelliJ IDEA**
 2. **File → Open**
-3. **Seleccionar**: `/Users/mateocisneros/IdeaProjects/Servicio_Calendario`
+3. **Seleccionar**: ``
 4. **Click**: OK
 5. **Esperar** a que IntelliJ indexe el proyecto
 

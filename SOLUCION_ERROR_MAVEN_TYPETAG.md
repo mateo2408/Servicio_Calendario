@@ -126,7 +126,7 @@ Agregar al inicio del `pom.xml`:
 ### 1. Limpiar completamente el proyecto
 
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 
 # Eliminar target y cache
 rm -rf target
@@ -224,7 +224,7 @@ mvn -version
 ### 2️⃣ SEGUNDO: Limpiar y recompilar
 
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 rm -rf target
 mvn clean compile
 ```

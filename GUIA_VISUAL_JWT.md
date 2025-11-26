@@ -161,7 +161,7 @@ Collection → Edit → Authorization → Bearer Token
 
 ```bash
 # Ejecutar script de prueba
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 ./test_jwt.sh
 ```
 

@@ -184,7 +184,7 @@ public class CalendarioApplication {
 ## 🚀 Comandos para Compilar
 
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 
 # Limpiar proyecto
 mvn clean
@@ -279,7 +279,7 @@ IntelliJ IDEA usa su propio compilador que evita este problema de Maven.
 ```bash
 brew update
 brew upgrade maven
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 mvn clean compile
 ```
 

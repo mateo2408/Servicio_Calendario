@@ -91,7 +91,7 @@ Algunos archivos se habían corrompido durante ediciones anteriores. Se recrearo
 
 ### Paso 1: Identificar el problema
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 mvn clean compile
 # ERROR: invalid source release 17 with --enable-preview
 ```
@@ -194,7 +194,7 @@ mvn clean compile
 
 ### Compilar
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 
 # Limpiar y compilar
 mvn clean compile

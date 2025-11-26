@@ -17,7 +17,7 @@
 
 ### Opción B: Con Maven (si funciona)
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 mvn spring-boot:run
 ```
 

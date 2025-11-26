@@ -21,7 +21,7 @@ Este script creará automáticamente:
 - 2 alertas
 
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 ./prueba_sistema_completo.sh
 ```
 

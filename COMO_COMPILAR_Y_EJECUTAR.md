@@ -76,7 +76,7 @@ brew upgrade maven
 mvn --version
 
 # 3. Limpiar y compilar
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 rm -rf target
 mvn clean compile
 

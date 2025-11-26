@@ -67,7 +67,7 @@ El proyecto ha sido implementado completamente con la arquitectura solicitada. T
 ### Opción 1: Sin RabbitMQ (Más simple)
 
 ```bash
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 
 # Compilar
 mvn clean install
@@ -88,7 +88,7 @@ brew install rabbitmq
 brew services start rabbitmq
 
 # 3. Compilar y ejecutar
-cd /Users/mateocisneros/IdeaProjects/Servicio_Calendario
+cd 
 mvn clean install
 mvn spring-boot:run
 ```
