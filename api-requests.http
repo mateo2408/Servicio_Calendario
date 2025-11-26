@@ -1,0 +1,295 @@
+###
+# Sistema de Calendario - Ejemplos de Autenticación JWT
+# Archivo para usar con REST Client (IntelliJ IDEA, VS Code)
+###
+
+### Variables
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### ============================================
+### 1. REGISTRAR NUEVO USUARIO
+### ============================================
+# @name registro
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "username": "testuser",
+  "password": "password123",
+  "email": "test@example.com",
+  "nombre": "Usuario de Prueba"
+}
+
+### Guardar token del registro
+@authToken = {{registro.response.body.token}}
+
+### ============================================
+### 2. INICIAR SESIÓN (LOGIN)
+### ============================================
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+
+### Guardar token del login
+@token = {{login.response.body.token}}
+
+### ============================================
+### 3. VALIDAR TOKEN
+### ============================================
+POST {{baseUrl}}/auth/token
+Authorization: Bearer {{token}}
+
+### ============================================
+### 4. CREAR CALENDARIO (Requiere Token)
+### ============================================
+# @name crearCalendario
+POST {{baseUrl}}/calendar
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Mi Calendario Personal",
+  "descripcion": "Información sensible que será cifrada",
+  "color": "#FF5733",
+  "publico": false
+}
+
+### Guardar ID del calendario
+@calendarioId = {{crearCalendario.response.body.id}}
+
+### ============================================
+### 5. OBTENER LISTA DE CALENDARIOS
+### ============================================
+GET {{baseUrl}}/calendar
+Authorization: Bearer {{token}}
+
+### ============================================
+### 6. OBTENER CALENDARIO POR ID
+### ============================================
+GET {{baseUrl}}/calendar/{{calendarioId}}
+Authorization: Bearer {{token}}
+
+### ============================================
+### 7. OBTENER VISTA PREPARADA DEL CALENDARIO
+### (Con datos descifrados)
+### ============================================
+GET {{baseUrl}}/calendar/view
+Authorization: Bearer {{token}}
+
+### ============================================
+### 8. AGREGAR EVENTO AL CALENDARIO
+### ============================================
+# @name crearEvento
+POST {{baseUrl}}/calendar/events
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "titulo": "Reunión Importante",
+  "descripcion": "Reunión con el equipo de desarrollo - datos sensibles",
+  "fechaInicio": "2025-12-01T10:00:00",
+  "fechaFin": "2025-12-01T11:30:00",
+  "ubicacion": "Sala de Juntas A",
+  "todoElDia": false,
+  "tipo": "EVENTO_LABORAL",
+  "calendarioId": {{calendarioId}}
+}
+
+### Guardar ID del evento
+@eventoId = {{crearEvento.response.body.id}}
+
+### ============================================
+### 9. CONFIGURAR ALERTA PARA EVENTO
+### ============================================
+POST {{baseUrl}}/alerts
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "eventoId": {{eventoId}},
+  "fechaAlerta": "2025-12-01T09:45:00",
+  "tipoNotificacion": "PUSH",
+  "minutosAnticipacion": 15,
+  "mensaje": "Recordatorio: Reunión en 15 minutos"
+}
+
+### ============================================
+### 10. OBTENER ALERTAS DEL USUARIO
+### ============================================
+GET {{baseUrl}}/alerts
+Authorization: Bearer {{token}}
+
+### ============================================
+### 11. CONFIRMAR NOTIFICACIÓN MOSTRADA
+### ============================================
+POST {{baseUrl}}/notifications/shown
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "alertaId": 1,
+  "fechaMostrada": "2025-11-26T12:00:00"
+}
+
+### ============================================
+### EJEMPLOS CON DIFERENTES USUARIOS
+### ============================================
+
+### Usuario 2 - Registro
+# @name usuario2
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "username": "maria.garcia",
+  "password": "securePass456",
+  "email": "maria@example.com",
+  "nombre": "María García"
+}
+
+@token2 = {{usuario2.response.body.token}}
+
+### Usuario 2 - Crear Calendario
+POST {{baseUrl}}/calendar
+Content-Type: {{contentType}}
+Authorization: Bearer {{token2}}
+
+{
+  "nombre": "Calendario de María",
+  "descripcion": "Eventos personales",
+  "color": "#3498db",
+  "publico": true
+}
+
+### ============================================
+### EJEMPLOS DE EVENTOS CON DIFERENTES TIPOS
+### ============================================
+
+### Evento - Tipo REUNION
+POST {{baseUrl}}/calendar/events
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "titulo": "Reunión Semanal",
+  "descripcion": "Revisión de proyecto",
+  "fechaInicio": "2025-12-02T14:00:00",
+  "fechaFin": "2025-12-02T15:00:00",
+  "ubicacion": "Zoom",
+  "todoElDia": false,
+  "tipo": "REUNION",
+  "calendarioId": {{calendarioId}}
+}
+
+### Evento - Tipo TAREA
+POST {{baseUrl}}/calendar/events
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "titulo": "Completar Informe",
+  "descripcion": "Informe mensual de actividades",
+  "fechaInicio": "2025-12-03T09:00:00",
+  "fechaFin": "2025-12-03T17:00:00",
+  "ubicacion": "Oficina",
+  "todoElDia": true,
+  "tipo": "TAREA",
+  "calendarioId": {{calendarioId}}
+}
+
+### Evento - Tipo PERSONAL
+POST {{baseUrl}}/calendar/events
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "titulo": "Cumpleaños",
+  "descripcion": "Celebración familiar",
+  "fechaInicio": "2025-12-15T00:00:00",
+  "fechaFin": "2025-12-15T23:59:59",
+  "ubicacion": "Casa",
+  "todoElDia": true,
+  "tipo": "PERSONAL",
+  "calendarioId": {{calendarioId}}
+}
+
+### ============================================
+### EJEMPLOS DE ALERTAS CON DIFERENTES TIPOS
+### ============================================
+
+### Alerta - Tipo EMAIL
+POST {{baseUrl}}/alerts
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "eventoId": {{eventoId}},
+  "fechaAlerta": "2025-12-01T08:00:00",
+  "tipoNotificacion": "EMAIL",
+  "minutosAnticipacion": 120,
+  "mensaje": "Recordatorio por email: Reunión en 2 horas"
+}
+
+### Alerta - Tipo SMS
+POST {{baseUrl}}/alerts
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "eventoId": {{eventoId}},
+  "fechaAlerta": "2025-12-01T09:30:00",
+  "tipoNotificacion": "SMS",
+  "minutosAnticipacion": 30,
+  "mensaje": "SMS: Reunión en 30 minutos"
+}
+
+### ============================================
+### PRUEBAS DE ERRORES
+### ============================================
+
+### Sin token (debe fallar con 401)
+GET {{baseUrl}}/calendar
+
+### Token inválido (debe fallar con 401)
+GET {{baseUrl}}/calendar
+Authorization: Bearer token_invalido_123
+
+### Login con credenciales incorrectas (debe fallar con 401)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "usuario_inexistente",
+  "password": "password_incorrecta"
+}
+
+### Registro con usuario duplicado (debe fallar)
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "username": "testuser",
+  "password": "otraPassword",
+  "email": "otro@example.com",
+  "nombre": "Otro Usuario"
+}
+
+### ============================================
+### NOTAS IMPORTANTES
+### ============================================
+#
+# 1. El token JWT tiene una duración de 24 horas
+# 2. Formato del header: Authorization: Bearer {token}
+# 3. Los tokens se generan automáticamente al registrar o hacer login
+# 4. Todos los endpoints excepto /auth/* requieren autenticación
+# 5. Los datos sensibles (descripción de calendarios y eventos) se cifran automáticamente
+# 6. Las alertas se procesan cada 60 segundos por un scheduler
+#
+### ============================================
+

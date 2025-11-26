@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Architecture name="SistemaCalendario" version="1.0">
+  <Layers>
+    <Layer id="presentation" name="Capa de Presentacion" order="1">
+      <Component id="web" type="UI" name="NavegadorWeb_AplicacionWebCalendario"/>
+      <Component id="mobile" type="UI" name="AplicacionMovil_Celular"/>
+      <Component id="tablet" type="UI" name="AplicacionTablet"/>
+      <Component id="thirdParty" type="UI" name="ServicioExterno_AplicacionTerceros"/>
+      <Notes>
+        <Note>Interacciones de usuario: uso, ingresa credenciales</Note>
+      </Notes>
+    </Layer>
+
+    <Layer id="integration" name="Capa de Integracion" order="2">
+      <Component id="apiGateway" type="Gateway" name="API_Gateway_HTTPS"/>
+      <Endpoints>
+        <Endpoint id="login" path="/auth/login" method="POST" description="solicitud de inicio de sesion"/>
+        <Endpoint id="getCalendar" path="/calendar" method="GET" description="solicitar calendario"/>
+        <Endpoint id="setAlert" path="/alerts" method="POST" description="configurar alerta"/>
+        <Endpoint id="token" path="/auth/token" method="POST" description="token de acceso"/>
+        <Endpoint id="showCalendar" path="/calendar/view" method="GET" description="mostrar calendario"/>
+        <Endpoint id="notifyShown" path="/notifications/shown" method="POST" description="notificacion mostrada"/>
+      </Endpoints>
+    </Layer>
+
+    <Layer id="applicationServices" name="Capa de Servicios de Aplicacion" order="3">
+      <Service id="authService" name="ServicioAutenticacion">
+        <Function>autenticar usuario</Function>
+        <Function>validar usuario</Function>
+        <Function>respuesta con token</Function>
+      </Service>
+
+      <Service id="calendarService" name="ServicioCalendario">
+        <Function>operaciones de calendario</Function>
+        <Function>peticion de calendario</Function>
+        <Function>vista preparada</Function>
+      </Service>
+
+      <Service id="notificationService" name="ServicioNotificaciones">
+        <Function>gestionar notificaciones</Function>
+        <Function>guardar alerta</Function>
+      </Service>
+
+      <Service id="encryptionService" name="ServicioCifrado">
+        <Function>cifrar datos</Function>
+        <Function>descifrar datos</Function>
+        <Function>descifrar calendario</Function>
+      </Service>
+    </Layer>
+
+    <Layer id="infrastructure" name="Capa de Infraestructura" order="4">
+      <Component id="userDb" type="Database" name="BaseDatosUsuarios"/>
+      <Component id="calendarDb" type="Database" name="BD_Calendarios" encrypted="true"/>
+      <Component id="messageBroker" type="Messaging" name="BrokerMensajes_BusEventos"/>
+      <Component id="notificationProviders" type="External" name="ProveedoresNotificaciones">
+        <Provider type="push">Push</Provider>
+        <Provider type="email">Email</Provider>
+        <Provider type="sms">SMS</Provider>
+      </Component>
+    </Layer>
+  </Layers>
+
+  <Interactions>
+    <!-- Presentacion -> Integracion -->
+    <Interaction from="NavegadorWeb_AplicacionWebCalendario" to="API_Gateway_HTTPS" protocol="HTTPS" action="solicitud" description="uso; ingresa credenciales"/>
+    <Interaction from="AplicacionMovil_Celular" to="API_Gateway_HTTPS" protocol="HTTPS" action="solicitud" description="solicitar calendario; configurar alerta"/>
+    <Interaction from="AplicacionTablet" to="API_Gateway_HTTPS" protocol="HTTPS" action="solicitud" description="mostrar calendario"/>
+    <Interaction from="ServicioExterno_AplicacionTerceros" to="API_Gateway_HTTPS" protocol="HTTPS" action="solicitud" description="integracion terceros"/>
+
+    <!-- Integracion -> Servicios -->
+    <Interaction from="API_Gateway_HTTPS" to="ServicioAutenticacion" protocol="internal" action="solicitud de inicio de sesion" description="validar credenciales; emitir token"/>
+    <Interaction from="API_Gateway_HTTPS" to="ServicioCalendario" protocol="internal" action="peticion de calendario" description="obtener eventos; operaciones calendario"/>
+    <Interaction from="API_Gateway_HTTPS" to="ServicioNotificaciones" protocol="internal" action="guardar alerta" description="configurar y programar notificaciones"/>
+    <Interaction from="API_Gateway_HTTPS" to="ServicioCifrado" protocol="internal" action="descifrar calendario" description="descifrar datos antes de mostrar"/>
+
+    <!-- Servicios -> Infraestructura -->
+    <Interaction from="ServicioAutenticacion" to="BaseDatosUsuarios" protocol="sql" action="consultar usuario" description="validar credenciales"/>
+    <Interaction from="ServicioCalendario" to="BD_Calendarios" protocol="sql" action="leer/escribir" description="calendarios cifrados"/>
+    <Interaction from="ServicioCifrado" to="BD_Calendarios" protocol="internal" action="cifrar/descifrar" description="cifrado en reposo"/>
+    <Interaction from="ServicioNotificaciones" to="BrokerMensajes_BusEventos" protocol="amqp" action="publicar evento" description="enviar eventos de notificacion"/>
+    <Interaction from="BrokerMensajes_BusEventos" to="ProveedoresNotificaciones" protocol="http" action="entregar notificacion" description="push/email/sms"/>
+    <Interaction from="ProveedoresNotificaciones" to="API_Gateway_HTTPS" protocol="http" action="notificacion mostrada" description="confirmacion de entrega"/>
+  </Interactions>
+
+  <Security>
+    <Auth tokenType="JWT" issuedBy="ServicioAutenticacion"/>
+    <Encryption atRest="true" service="ServicioCifrado" scope="BD_Calendarios"/>
+    <TransportSecurity protocols="HTTPS"/>
+  </Security>
+
+  <Metadata>
+    <Author>Generado automaticamente</Author>
+    <Date>2025-11-26</Date>
+    <Description>Modelo XML de la arquitectura del sistema de calendario con capas, componentes e interacciones</Description>
+  </Metadata>
+</Architecture>
+
