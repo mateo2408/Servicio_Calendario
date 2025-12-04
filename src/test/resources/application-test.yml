@@ -1,0 +1,44 @@
+# Configuración para pruebas
+spring:
+  datasource:
+    # H2 para pruebas unitarias rápidas (se sobrescribe con TestContainers en integración)
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  # RabbitMQ deshabilitado para pruebas
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  # Logging
+  logging:
+    level:
+      org.example: DEBUG
+      org.springframework: WARN
+      org.hibernate: WARN
+
+# JWT Configuration para pruebas
+jwt:
+  secret: dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nLXB1cnBvc2VzLW9ubHktMTIzNDU2Nzg5MA==
+  expiration: 86400000
+
+# Encryption key para pruebas
+encryption:
+  key: test-encryption-key-32-chars!!
+
+# Desabilitar security para algunos tests
+spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
