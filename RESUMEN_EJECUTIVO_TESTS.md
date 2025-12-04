@@ -272,7 +272,7 @@ authResponse.setEmail("test@email.com");
 ### 1. Resolver Error de Lombok ⚙️
 ```bash
 # Ver: SOLUCION_ERROR_LOMBOK.md
-rm -rf ~/.m2/repository/org/projectlombok/
+rm -rf $HOME/.m2/repository/org/projectlombok/
 mvn clean install -DskipTests
 ```
 

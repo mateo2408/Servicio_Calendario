@@ -111,7 +111,7 @@ mvn test -Dtest="*Auth*Test"
 ```bash
 # Opción 1: Limpiar completamente
 rm -rf target/
-rm -rf ~/.m2/repository/org/projectlombok/
+rm -rf $HOME/.m2/repository/org/projectlombok/
 mvn clean
 mvn install -DskipTests
 

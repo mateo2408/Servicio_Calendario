@@ -124,7 +124,7 @@ Para verificar que Lombok se configuró correctamente:
 
 1. **Verificar dependencia descargada**:
 ```bash
-ls -la ~/.m2/repository/org/projectlombok/lombok/1.18.30/
+ls -la $HOME/.m2/repository/org/projectlombok/lombok/1.18.30/
 ```
 
 2. **Probar compilación simple**:
